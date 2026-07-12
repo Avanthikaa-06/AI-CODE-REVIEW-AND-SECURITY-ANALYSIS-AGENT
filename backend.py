@@ -1,16 +1,3 @@
-"""
-backend.py
-AI Code Review & Security Analysis Agent — combined backend module.
-
-This single file merges what used to be four separate modules:
-    - validators.py       (Python/Java syntax validation)
-    - github_handler.py   (clone a GitHub repo, extract source files)
-    - url_handler.py      (download a raw file, incl. GitHub blob URLs)
-    - code_submission.py  (orchestration layer used directly by app.py)
-
-Every public function still returns a plain dict and never raises, so
-app.py's usage doesn't need to change beyond updating its import line.
-"""
 
 import os
 import re
@@ -21,15 +8,8 @@ import ast
 
 import requests
 
-
-# ============================================================
-# Validation (formerly validators.py)
-# ============================================================
-
 def validate_python(code: str) -> dict:
-    """
-    Validate Python code using ast.parse().
-    """
+    
     if code is None or not code.strip():
         return {
             "valid": False,
@@ -65,10 +45,7 @@ def validate_python(code: str) -> dict:
 
 
 def extract_public_class_name(code: str) -> str:
-    """
-    Detect the public class name in Java source using regex.
-    Falls back to 'TempClass' if no public class is found.
-    """
+    
     if not code:
         return "TempClass"
 
@@ -82,12 +59,7 @@ def extract_public_class_name(code: str) -> str:
 
 
 def validate_java(code: str) -> dict:
-    """
-    Validate Java code using the javac compiler.
-    Writes the file using the detected public class name so javac
-    never complains about a filename mismatch (avoids the
-    "class X is public, should be declared in TempClass.java" bug).
-    """
+    
     if code is None or not code.strip():
         return {
             "valid": False,
@@ -157,10 +129,7 @@ def validate_java(code: str) -> dict:
 
 
 def validate_code(code: str, language: str) -> dict:
-    """
-    Dispatch to the correct validator based on the (already known) language.
-    `language` is always one of 'python' / 'java' — never guessed here.
-    """
+    
     if language == "python":
         return validate_python(code)
     elif language == "java":
@@ -172,11 +141,6 @@ def validate_code(code: str, language: str) -> dict:
             "message": f"Validation not supported for '{language}'.",
             "line": None,
         }
-
-
-# ============================================================
-# GitHub repository handling (formerly github_handler.py)
-# ============================================================
 
 GITHUB_URL_PATTERN = re.compile(
     r'^https?://github\.com/[\w.-]+/[\w.-]+(\.git)?/?$'
@@ -190,9 +154,7 @@ def is_valid_github_url(url: str) -> bool:
 
 
 def clone_and_extract(repo_url: str, max_files: int = 25) -> dict:
-    """
-    Clone the repo into a temp dir and collect supported files.
-    """
+   
     repo_url = (repo_url or "").strip()
 
     if not is_valid_github_url(repo_url):
@@ -267,23 +229,13 @@ def clone_and_extract(repo_url: str, max_files: int = 25) -> dict:
         shutil.rmtree(temp_dir, ignore_errors=True)
 
 
-# ============================================================
-# Raw / GitHub blob URL downloading (formerly url_handler.py)
-# ============================================================
-
 GITHUB_BLOB_PATTERN = re.compile(
     r'^https?://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.+)$'
 )
 
 
 def convert_github_blob_url(url: str) -> str:
-    """
-    If `url` is a standard GitHub file URL
-    (github.com/<user>/<repo>/blob/<branch>/<file>), convert it to the
-    equivalent raw.githubusercontent.com URL. Any other URL (including
-    ones that are already raw.githubusercontent.com links) is returned
-    unchanged.
-    """
+    
     if not url:
         return url
 
@@ -310,11 +262,7 @@ def detect_language_from_url(url: str) -> str:
 
 
 def download_file(url: str) -> dict:
-    """
-    Download a raw source file. Always returns a dict — never raises.
-    Accepts either a raw.githubusercontent.com URL or a normal
-    github.com/.../blob/... URL (converted automatically).
-    """
+  
     url = (url or "").strip()
 
     if not url:
@@ -378,12 +326,6 @@ def download_file(url: str) -> dict:
             "file_name": None,
             "language": None,
         }
-
-
-# ============================================================
-# Orchestration layer (formerly code_submission.py)
-# ============================================================
-
 def _build_result(code: str, language: str, file_name: str) -> dict:
     code = code or ""
 
