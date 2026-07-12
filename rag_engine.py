@@ -1,46 +1,11 @@
-"""
-rag_engine.py
-AI Code Review & Security Analysis Agent — combined RAG (Retrieval-Augmented
-Generation) module for the Secure Coding Knowledge Base.
-
-This single file merges what used to be five separate files under rag/:
-    - document_loader.py  (load .pdf / .txt / .docx / .html from knowledge_base/)
-    - chunking.py          (split text into overlapping chunks)
-    - embeddings.py        (sentence-transformers embeddings)
-    - vector_store.py      (FAISS index + metadata)
-    - rag_pipeline.py      (ties it all together — the class app.py uses)
-
-Pipeline:
-    knowledge_base/ documents
-        -> document loading (PDF / TXT / DOCX / HTML)
-        -> chunking (500 chars, 50 overlap)
-        -> embeddings (all-MiniLM-L6-v2)
-        -> FAISS vector store
-        -> retriever
-        -> user query -> relevant chunks
-
-LLM-based answer generation is intentionally NOT wired in — Milestone 1
-only requires retrieval of relevant chunks. app.py only needs to import
-RAGPipeline from this file; everything else here is internal plumbing.
-"""
 
 import os
 import re
 import pickle
 
 import numpy as np
-
-
-# ============================================================
-# Document loading (formerly rag/document_loader.py)
-# ============================================================
-
 def _load_html(path: str) -> str:
-    """
-    Best-effort plain-text extraction from an HTML file without requiring
-    an extra dependency like BeautifulSoup. Strips tags, scripts, and
-    styles, then collapses whitespace.
-    """
+    
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
         html = f.read()
 
@@ -93,15 +58,7 @@ SUPPORTED_LOADERS = {
 
 
 def load_documents(knowledge_base_dir: str = "knowledge_base") -> list:
-    """
-    Load every supported file inside knowledge_base_dir.
-
-    Returns a list of dicts:
-        {"source": "OWASP_Top10.pdf", "text": "..."}
-
-    Files that fail to load are skipped (with a printed warning)
-    instead of crashing the whole pipeline.
-    """
+    
     documents = []
 
     if not os.path.isdir(knowledge_base_dir):
@@ -124,20 +81,12 @@ def load_documents(knowledge_base_dir: str = "knowledge_base") -> list:
 
     return documents
 
-
-# ============================================================
-# Chunking (formerly rag/chunking.py)
-# ============================================================
-
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 
 
 def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) -> list:
-    """
-    Split a single string into overlapping chunks.
-    Returns a list of chunk strings (empty list for empty input).
-    """
+  
     if not text or not text.strip():
         return []
 
@@ -164,13 +113,7 @@ def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVE
 
 
 def chunk_documents(documents: list) -> list:
-    """
-    Take documents as produced by load_documents():
-        [{"source": "file.pdf", "text": "..."}, ...]
-
-    Return a flat list of chunk records:
-        [{"source": "file.pdf", "chunk_id": 0, "text": "..."}, ...]
-    """
+ 
     all_chunks = []
 
     for doc in documents:
@@ -187,22 +130,13 @@ def chunk_documents(documents: list) -> list:
 
     return all_chunks
 
-
-# ============================================================
-# Embeddings (formerly rag/embeddings.py)
-# ============================================================
-
 MODEL_NAME = "all-MiniLM-L6-v2"
 
 _model = None  # lazy-loaded singleton
 
 
 def get_model():
-    """
-    Load (or return the cached) SentenceTransformer model.
-    Raises a clear RuntimeError if the package isn't installed or
-    the model can't be downloaded, instead of an opaque traceback.
-    """
+    
     global _model
 
     if _model is not None:
@@ -227,11 +161,7 @@ def get_model():
 
 
 def embed_texts(texts: list):
-    """
-    Generate embeddings for a list of strings.
-    Returns a numpy array of shape (len(texts), embedding_dim).
-    Returns an empty list if `texts` is empty — never crashes on empty input.
-    """
+    
     if not texts:
         return []
 
@@ -241,26 +171,15 @@ def embed_texts(texts: list):
 
 
 def embed_query(query: str):
-    """
-    Generate a single embedding vector for a query string.
-    """
+    
     if not query or not query.strip():
         return None
 
     model = get_model()
     return model.encode([query], show_progress_bar=False, convert_to_numpy=True)[0]
 
-
-# ============================================================
-# Vector store (formerly rag/vector_store.py)
-# ============================================================
-
 class VectorStore:
-    """
-    Stores embeddings in a FAISS index (flat L2 index — simple and
-    reliable for a knowledge base of this size) alongside parallel
-    metadata describing where each vector came from.
-    """
+    
 
     def __init__(self, dimension: int = None):
         self.dimension = dimension
@@ -268,10 +187,7 @@ class VectorStore:
         self.metadata = []  # list of {"source": ..., "chunk_id": ..., "text": ...}
 
     def build(self, embeddings, metadata: list):
-        """
-        Build a fresh FAISS index from a matrix of embeddings and
-        their parallel metadata list.
-        """
+        
         try:
             import faiss
         except ImportError:
@@ -292,11 +208,7 @@ class VectorStore:
         self.metadata = metadata
 
     def search(self, query_embedding, top_k: int = 3) -> list:
-        """
-        Search the index for the top_k most similar chunks.
-        Returns a list of dicts: {"source", "chunk_id", "text", "score"}.
-        Returns an empty list if the index hasn't been built yet.
-        """
+      
         if self.index is None or query_embedding is None:
             return []
 
@@ -317,7 +229,6 @@ class VectorStore:
         return self.index is not None and len(self.metadata) > 0
 
     def save(self, directory: str):
-        """Persist the index and metadata to disk for reuse across runs."""
         try:
             import faiss
         except ImportError:
@@ -330,10 +241,6 @@ class VectorStore:
             pickle.dump(self.metadata, f)
 
     def load(self, directory: str) -> bool:
-        """
-        Load a previously saved index. Returns True on success,
-        False if no saved index exists (never raises).
-        """
         index_path = os.path.join(directory, "index.faiss")
         meta_path = os.path.join(directory, "metadata.pkl")
 
@@ -349,23 +256,11 @@ class VectorStore:
         except Exception:
             return False
 
-
-# ============================================================
-# Pipeline orchestration (formerly rag/rag_pipeline.py)
-# ============================================================
-
 CACHE_DIR = os.path.join(os.path.dirname(__file__), ".rag_cache")
 
 
 class RAGPipeline:
-    """
-    Wraps the whole indexing + retrieval workflow behind a simple API:
-
-        pipeline = RAGPipeline()
-        status = pipeline.build_index()
-        results = pipeline.query("What is SQL Injection?")
-    """
-
+    
     def __init__(self, knowledge_base_dir: str = "knowledge_base"):
         self.knowledge_base_dir = knowledge_base_dir
         self.store = VectorStore()
@@ -374,10 +269,7 @@ class RAGPipeline:
         self.error = None
 
     def build_index(self, use_cache: bool = True) -> dict:
-        """
-        Load documents, chunk them, embed them, and build the FAISS index.
-        Always returns a status dict — never raises up to the caller.
-        """
+        
         self.error = None
 
         if use_cache and self.store.load(CACHE_DIR):
@@ -429,10 +321,7 @@ class RAGPipeline:
         }
 
     def query(self, question: str, top_k: int = 3) -> dict:
-        """
-        Retrieve the most relevant chunks for a question.
-        Always returns a dict — never raises.
-        """
+        
         if not question or not question.strip():
             return {"success": False, "error": "Please enter a question.", "results": []}
 
