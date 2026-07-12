@@ -1,0 +1,133 @@
+OWASP Top 10 2025
+
+List of OWASP Top 10 Security Risks:
+
+A01: Broken Access Control
+A02: Security Misconfiguration
+A03: Software Supply Chain Failures
+A04: Cryptographic Failures
+A05: Injection
+A06: Insecure Design
+A07: Authentication Failures
+A08: Software and Data Integrity Failures
+A09: Security Logging and Alerting Failures
+A10: Mishandling of Exceptional Conditions
+
+A01: Broken Access Control
+
+What is it?
+Broken Access Control occurs when users can access resources, data, or functions beyond their authorized permissions.
+
+Prevention:
+- Deny access by default
+- Enforce authorization checks
+- Apply least privilege
+- Validate resource ownership
+
+A02: Security Misconfiguration
+
+What is it?
+Security Misconfiguration occurs when applications or servers use insecure settings, default credentials, or unnecessary services.
+
+Prevention:
+- Remove unused features
+- Disable default accounts
+- Configure security headers
+- Keep systems updated
+
+A03: Software Supply Chain Failures
+
+What is it?
+Software Supply Chain Failures occur when vulnerable or malicious third-party libraries, dependencies, or software components introduce security risks.
+
+Prevention:
+- Use trusted sources
+- Scan dependencies regularly
+- Track software components
+- Maintain SBOM
+
+A04: Cryptographic Failures
+
+What is it?
+Cryptographic Failures occur when weak encryption or poor key management exposes sensitive data.
+
+Prevention:
+- Use strong encryption
+- Protect keys securely
+- Encrypt sensitive data
+- Use modern hashing algorithms
+
+A05: Injection
+
+What is it?
+Injection vulnerabilities occur when untrusted input is executed as commands or queries.
+
+Prevention:
+- Use parameterized queries
+- Validate input
+- Sanitize user data
+- Avoid dynamic queries
+
+A06: Insecure Design
+
+What is it?
+Insecure Design occurs when security controls are not included during application design.
+
+Prevention:
+- Perform threat modeling
+- Apply secure design principles
+- Follow Secure SDLC
+- Include security requirements early
+
+A07: Authentication Failures
+
+What is it?
+Authentication Failures occur when weak authentication allows attackers to compromise accounts.
+
+Prevention:
+- Use Multi-Factor Authentication (MFA)
+- Enforce strong passwords
+- Prevent brute-force attacks
+- Secure session management
+
+A08: Software and Data Integrity Failures
+
+What is it?
+Software and Data Integrity Failures occur when software updates, code, or data can be modified by unauthorized users.
+
+Prevention:
+- Verify digital signatures
+- Protect CI/CD pipelines
+- Validate updates
+- Use trusted repositories
+
+A09: Security Logging and Alerting Failures
+
+What is it?
+Security Logging and Alerting Failures occur when attacks remain undetected because of insufficient logging and monitoring.
+
+Prevention:
+- Log security events
+- Monitor suspicious activities
+- Generate alerts
+- Maintain audit trails
+
+A10: Mishandling of Exceptional Conditions
+
+What is it?
+Mishandling of Exceptional Conditions occurs when applications fail to securely handle errors and unexpected situations.
+
+Prevention:
+- Handle exceptions securely
+- Fail securely
+- Monitor recurring errors
+- Roll back failed operations safely
+Key Security Principles:
+- Least Privilege
+- Defense in Depth
+- Secure by Default
+- Input Validation
+- Authentication
+- Authorization
+- Encryption
+- Logging and Monitoring

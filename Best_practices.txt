@@ -1,0 +1,40 @@
+Software Security Best Practices
+1. Least Privilege
+Grant only the permissions required to perform tasks.
+2. Input Validation
+Validate and sanitize all user input before processing.
+3. Secure Authentication
+Use strong passwords and Multi-Factor Authentication (MFA).
+4. Data Protection
+Encrypt sensitive data at rest and in transit.
+5. Parameterized Queries
+Use prepared statements to prevent SQL Injection.
+6. Session Security
+Use secure session IDs and invalidate sessions after logout.
+7. Software Updates
+Keep operating systems, libraries, and frameworks updated.
+8. Secure Error Handling
+Show generic errors to users and log details securely.
+9. Logging and Monitoring
+Record security events and monitor suspicious activities.
+10. Dependency Management
+Use trusted libraries and regularly scan for vulnerabilities.
+11. Secure Configuration
+Remove default credentials and disable unnecessary services.
+12. Code Reviews and Testing
+Perform code reviews, vulnerability assessments, and security testing.
+13. Backup and Recovery
+Maintain secure backups and test recovery procedures regularly.
+14. Secure Development Lifecycle
+Integrate security throughout design, development, testing, and deployment.
+15. Defense in Dept
+Use multiple layers of security controls.
+16. Fail Securely
+Protect data and deny access when errors occur.
+Key Principles:
+- Confidentiality
+- Integrity
+- Availability
+- Least Privilege
+- Defense in Depth
+- Secure by Default

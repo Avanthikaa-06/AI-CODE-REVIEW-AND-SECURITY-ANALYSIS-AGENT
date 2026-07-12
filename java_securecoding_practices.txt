@@ -1,0 +1,27 @@
+Java Secure Coding Practices
+1. Input Validation and Data Handling
+All user input should be validated at the API boundary using Bean Validation annotations such as @NotNull, @Size, and @Pattern. Developers should use allow-lists to define expected input formats rather than relying on blocklists of dangerous characters. Proper validation helps prevent injection attacks and invalid data processing.
+2. Database Security
+Applications should always use PreparedStatement with bind parameters instead of building SQL queries through string concatenation. Dynamic SQL inside stored procedures should also be avoided. Database connections should use connection pooling frameworks such as HikariCP and follow the principle of least privilege.
+3. Secrets and Configuration Management
+Credentials should never be hardcoded in Java source files or configuration files committed to version control. Sensitive configuration should be stored using environment variables, externalized configuration, or secret management systems. Sensitive configuration data should be encrypted at rest.
+4. Cryptography and Password Security
+Security-sensitive operations should use SecureRandom instead of Random. Passwords should be hashed using BCrypt or Argon2. Weak algorithms such as MD5 and SHA-1 should not be used for password storage. Developers should rely on trusted cryptographic libraries instead of implementing custom encryption algorithms.
+5. Secure Deserialization
+Native Java deserialization should be avoided for untrusted data because it can lead to Remote Code Execution attacks. JSON-based serialization formats are preferred. If deserialization is required, ObjectInputFilter should be used to restrict allowed classes.
+6. Error Handling and Exception Management
+Applications should catch specific exceptions rather than using broad exception handling. Empty catch blocks should be avoided. Error messages returned to users should be generic, while detailed error information should be logged securely on the server. Resources should be released using try-with-resources whenever possible.
+7. Access Control
+Access control should be implemented using established frameworks such as Spring Security. Developers should follow the principle of least privilege and avoid exposing internal object references. Data Transfer Objects (DTOs) should be used to protect internal application structures.
+8. Dependency Management
+Dependencies should be managed using Maven or Gradle with version pinning. Security scanning tools such as OWASP Dependency Check and Snyk should be used regularly. Unnecessary dependencies should be removed to reduce the attack surface.
+9. General Secure Coding Practices
+Developers should avoid Runtime.exec() with untrusted input. Immutable objects should be used where possible to improve thread safety. Static analysis tools such as SpotBugs and Find Security Bugs should be integrated into the development lifecycle.
+Key Principles:
+- Input Validation
+- Least Privilege
+- Secure Authentication
+- Secure Cryptography
+- Dependency Security
+- Secure Error Handling
+- Secure Configuration Management

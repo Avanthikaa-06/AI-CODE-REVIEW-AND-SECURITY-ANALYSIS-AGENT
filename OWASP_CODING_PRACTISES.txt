@@ -1,0 +1,63 @@
+OWASP Secure Coding Practices
+
+1. Input Validation
+Validate all user input on the server side.
+Use allow-lists and verify type, length, range, and format.
+
+2. Output Encoding
+Encode output correctly for HTML, JavaScript, CSS, and URLs.
+Prevent Cross-Site Scripting (XSS).
+
+3. Authentication Security
+Use strong password hashing.
+Avoid weak algorithms such as MD5.
+Enable Multi-Factor Authentication (MFA) when possible.
+
+4. Session Management
+Use secure session IDs.
+Store sessions in secure cookies.
+Invalidate sessions after logout.
+
+5. Access Control
+Perform authorization checks on every request.
+Follow the Principle of Least Privilege.
+
+6. Cryptographic Security
+Use trusted cryptographic libraries.
+Protect encryption keys securely.
+Use SecureRandom for tokens and secrets.
+
+7. Error Handling and Logging
+Show generic error messages.
+Do not expose system details or stack traces.
+Log security events for monitoring.
+
+8. Data Protection
+Encrypt sensitive data at rest and in transit.
+Avoid exposing sensitive information in code or client-side storage.
+
+9. Communication Security
+Use HTTPS/TLS for all sensitive communications.
+Validate certificates properly.
+
+10. Database Security
+Use parameterized queries and prepared statements.
+Prevent SQL Injection attacks.
+Use least-privilege database accounts.
+
+11. File Security
+Validate uploaded files.
+Restrict file types and secure storage locations.
+
+12. General Practices
+Use trusted frameworks and libraries.
+Keep dependencies updated.
+Avoid executing system commands with user input.
+
+Key Principles:
+- Confidentiality
+- Integrity
+- Availability
+- Least Privilege
+- Defense in Depth
+- Secure by Default

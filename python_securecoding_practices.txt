@@ -1,0 +1,25 @@
+Python Coding Practices
+1. Input Validation and Data Handling
+All external input, including user input, file uploads, and API responses, should be validated before use. Developers should verify data types, ranges, lengths, and formats. Allow-list validation is preferred over deny-list validation. When parsing literals, use ast.literal_eval() instead of eval() because eval() can execute arbitrary code.
+2. Database Security
+Applications should always use parameterized queries instead of building SQL statements through string concatenation, f-strings, or percent formatting. ORMs such as SQLAlchemy and Django ORM should be used when possible because they automatically support parameterized queries. Database accounts should follow the principle of least privilege.
+3. Secrets and Configuration Management
+API keys, passwords, and tokens should never be hardcoded in source code. Environment variables or secret management systems should be used instead. Sensitive files such as .env should not be committed to version control. Production systems should use dedicated secrets management solutions.
+4. Cryptography and Password Security
+The secrets module should be used for security-sensitive random values such as session IDs and password reset tokens. Passwords should be hashed using bcrypt, Argon2, or Passlib. Weak algorithms such as MD5 and SHA-1 should not be used. Encryption should rely on trusted libraries such as cryptography.
+5. Secure Deserialization
+pickle.loads() should never be used on untrusted data because it can execute arbitrary code. JSON should be preferred for data exchange between systems.
+6. Error Handling
+Applications should catch specific exceptions instead of using bare except statements. Stack traces and internal system details should not be exposed to end users in production environments. Logs should never contain passwords, tokens, or sensitive user information.
+7. Dependency Management
+Dependency versions should be pinned in requirements.txt or managed through lock files. Security scanning tools such as pip-audit and Safety should be run regularly. Virtual environments should be used to isolate project dependencies.
+8. General Secure Coding Practices
+Use type hints to improve code quality and reduce bugs. Run Bandit static analysis to detect common security issues. Avoid subprocess.shell=True with untrusted input and pass command arguments as a list instead of building shell command strings.
+Key Security Principles:
+- Input Validation
+- Least Privilege
+- Secure Authentication
+- Secure Configuration Management
+- Secure Cryptography
+- Secure Error Handling
+- Dependency Security
