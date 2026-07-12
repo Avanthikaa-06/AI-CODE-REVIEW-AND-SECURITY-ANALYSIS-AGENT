@@ -1,13 +1,3 @@
-"""
-app.py
-AI Code Review & Security Analysis Agent
-
-Single-file Streamlit application. Both the Code Submission Module and the
-Secure Coding Knowledge Base live here, switched via a custom top navigation
-bar (not Streamlit's default sidebar page list). All underlying logic
-(validation, GitHub/URL handling, RAG retrieval) is unchanged from before —
-only presentation and navigation were redesigned.
-"""
 
 import streamlit as st
 
@@ -26,9 +16,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ----------------------------------------------------------------------
-# Global styling - premium SaaS look (Professional Blue theme)
-# ----------------------------------------------------------------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -224,9 +211,6 @@ div[role="radiogroup"] {
 </style>
 """, unsafe_allow_html=True)
 
-# ----------------------------------------------------------------------
-# Session state
-# ----------------------------------------------------------------------
 if "active_view" not in st.session_state:
     st.session_state.active_view = "code_submission"
 
@@ -238,11 +222,6 @@ if "rag_pipeline" not in st.session_state:
     st.session_state.rag_pipeline = RAGPipeline()
 if "rag_status" not in st.session_state:
     st.session_state.rag_status = None
-
-
-# ----------------------------------------------------------------------
-# Top navigation bar
-# ----------------------------------------------------------------------
 nav_col1, nav_col2, nav_col3 = st.columns([1, 1, 1])
 with nav_col2:
     inner_col1, inner_col2 = st.columns(2)
@@ -265,10 +244,6 @@ with nav_col2:
 
 st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
 
-
-# ----------------------------------------------------------------------
-# Shared render helper - Results Dashboard card
-# ----------------------------------------------------------------------
 def render_results_dashboard(result: dict) -> None:
     st.markdown("### Results")
 
@@ -326,11 +301,6 @@ def render_results_dashboard(result: dict) -> None:
         with st.expander("Code Preview", expanded=False):
             lang_for_highlight = "python" if result["language"] == "python" else "java"
             st.code(result["code"], language=lang_for_highlight, line_numbers=True)
-
-
-# ----------------------------------------------------------------------
-# View: Code Submission
-# ----------------------------------------------------------------------
 def render_code_submission_view() -> None:
     st.markdown('<div class="hero-title">Code Submission Module</div>', unsafe_allow_html=True)
     st.markdown(
@@ -349,8 +319,6 @@ def render_code_submission_view() -> None:
     st.write("")
 
     tab1, tab2, tab3, tab4 = st.tabs(["Paste Code", "Upload File", "GitHub Repository", "Raw URL"])
-
-    # ---------------- Tab 1: Paste ----------------
     with tab1:
         placeholder = 'print("Hello World")' if language == "python" else (
             'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello");\n    }\n}'
@@ -367,8 +335,6 @@ def render_code_submission_view() -> None:
             st.session_state.result_paste = process_pasted_code(pasted_code, language)
 
         render_results_dashboard(st.session_state.result_paste)
-
-    # ---------------- Tab 2: Upload ----------------
     with tab2:
         accepted_ext = ["py"] if language == "python" else ["java"]
         uploaded_file = st.file_uploader(
@@ -388,8 +354,6 @@ def render_code_submission_view() -> None:
                     st.error(f"Unsupported file type or unreadable file: {e}")
 
         render_results_dashboard(st.session_state.result_upload)
-
-    # ---------------- Tab 3: GitHub ----------------
     with tab3:
         repo_url = st.text_input("GitHub repository URL", placeholder="https://github.com/user/repo")
         if st.button("Analyze Code", key="run_github", type="primary"):
@@ -413,8 +377,6 @@ def render_code_submission_view() -> None:
                     )
 
         render_results_dashboard(st.session_state.result_github)
-
-    # ---------------- Tab 4: Raw URL ----------------
     with tab4:
         raw_url = st.text_input("Raw file URL", placeholder="https://github.com/username/repo/blob/main/File.py")
         if st.button("Analyze Code", key="run_url", type="primary"):
@@ -435,10 +397,6 @@ def render_code_submission_view() -> None:
 
         render_results_dashboard(st.session_state.result_url)
 
-
-# ----------------------------------------------------------------------
-# View: Knowledge Base
-# ----------------------------------------------------------------------
 def render_knowledge_base_view() -> None:
     st.markdown('<div class="hero-title">Secure Coding Knowledge Base</div>', unsafe_allow_html=True)
     st.markdown(
@@ -541,14 +499,10 @@ def render_knowledge_base_view() -> None:
                             """,
                             unsafe_allow_html=True,
                         )
-
-
-# ----------------------------------------------------------------------
-# Router
-# ----------------------------------------------------------------------
 if st.session_state.active_view == "code_submission":
     render_code_submission_view()
 else:
     render_knowledge_base_view()
+
 
 
