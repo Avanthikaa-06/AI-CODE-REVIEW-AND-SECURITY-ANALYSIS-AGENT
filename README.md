@@ -158,17 +158,3 @@ streamlit run app.py
 
 If a valid Gemini API key is provided, the application enables AI-powered analysis. Otherwise, all analysis is performed using local static analysis tools.
 
----
-
-## 8. Output
-
-The application generates:
-
-- Code Quality Analysis Report
-- Security Vulnerability Report
-- Complexity Analysis
-- OWASP Mapping
-- CWE Mapping
-- Security Score
-- Tool Execution Summary
-- Downloadable PDF Security Report
