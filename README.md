@@ -1,106 +1,174 @@
 # AI Code Review & Security Analysis Agent
 
-## Project Overview
+## 1. Overview
 
-This project was developed as part of the Infosys Springboard Internship.
-
-The application consists of two modules:
-
-1. Code Submission Module
-2. Secure Coding Knowledge Base
+AI Code Review & Security Analysis Agent is a Streamlit-based multi-agent application that performs automated static analysis of **Python** and **Java** source code. The system combines multiple static analysis tools with LangGraph orchestration to identify code quality issues, security vulnerabilities, complexity problems, and design issues. An optional Gemini AI review provides intelligent explanations and remediation suggestions.
 
 ---
 
-## Features
+## 2. Features
 
-### Code Submission Module
-
-Users can submit code through:
-
-- Paste Code
-- Upload File
-- GitHub Repository
-- Raw URL
-
-Supported Languages:
-
-- Python
-- Java
-
-The system validates code and displays:
-
-- Language
-- File Name
-- Number of Lines
-- Number of Characters
-- Validation Status
-- Error Details
+- Automatic Python and Java language detection
+- Multiple code submission methods
+  - Paste Code
+  - Upload File
+  - GitHub Repository
+  - Raw GitHub File URL
+- Parallel execution using LangGraph
+- Code Quality Analysis
+- Security Vulnerability Analysis
+- OWASP & CWE Mapping
+- Security Score Calculation
+- Interactive Streamlit Dashboard
+- PDF Report Generation
+- Knowledge Base (RAG) Integration
+- Optional Gemini AI Review
+- Tool Execution Status Monitoring
 
 ---
 
-### Secure Coding Knowledge Base
+## 3. Technologies Used
 
-The knowledge base contains:
-
-- OWASP Top 10 2025
-- OWASP Secure Coding Practices
-- Java Secure Coding Practices
-- Python Secure Coding Practices
-- Security Best Practices
-- Frequently Asked Questions
-
-Users can search security-related topics and retrieve relevant information from the indexed documents.
-
----
-
-## Technologies Used
-
-- Python
-- Streamlit
-- FAISS
-- Sentence Transformers
-- GitHub Integration
+| Category | Technologies |
+|-----------|--------------|
+| Frontend | Streamlit |
+| Programming Languages | Python, Java |
+| Agent Framework | LangGraph |
+| LLM Framework | LangChain |
+| AI Model | Google Gemini (Optional) |
+| Python Analysis | Pylint, Radon, Python AST |
+| Java Analysis | PMD, Javalang AST |
+| Security Analysis | Bandit, Semgrep |
+| Knowledge Base | FAISS, Sentence Transformers |
+| PDF Report | ReportLab |
+| Networking | Requests |
 
 ---
 
-## Project Structure
+## 4. Project Structure
 
 ```text
-app.py
-backend.py
-rag_engine.py
-requirements.txt
-
-Best_practices.txt
-FAQ.txt
-java_securecoding_practices.txt
-OWASP_CODING_PRACTISES.txt
-OWASP_Top10_2025.txt
-python_securecoding_practices.txt
+AI-Code-Review-Agent/
+│
+├── app.py
+├── backend.py
+├── language_detector.py
+├── rag_engine.py
+├── report_generator.py
+├── schemas.py
+├── requirements.txt
+│
+├── agents/
+│   ├── orchestrator.py
+│   ├── codeanalysis.py
+│   └── securityagent.py
+│
+├── knowledge_base/
+│
+├── rules/
+│
+├── samples/
+│
+├── tests/
+│
+└── README.md
 ```
 
 ---
 
-## Installation
+## 5. Prerequisites
+
+Before running the project, ensure the following software is installed:
+
+- Python 3.10 or later
+- Git
+- Java JDK 17 or later (recommended for Java validation)
+- Semgrep
+- PMD (Optional)
+- Google Gemini API Key (Optional)
+
+---
+
+## 6. Installation
+
+### Clone the Repository
+
+```bash
+git clone <repository-url>
+cd AI-Code-Review-Agent
+```
+
+### Create a Virtual Environment
+
+**Windows**
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+**Linux/macOS**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## Running the Application
+### Install Semgrep
 
 ```bash
-py -m streamlit run app.py
+pip install semgrep
 ```
 
-The application will open in your browser.
+### Verify Java Installation
+
+```bash
+javac -version
+```
+
+### Configure PMD (Optional)
+
+**Windows**
+
+```text
+PMD_CMD=C:\path\to\pmd\bin\pmd.bat
+```
+
+**Linux/macOS**
+
+```bash
+export PMD_CMD=/path/to/pmd/bin/pmd
+```
 
 ---
 
-## Author
+## 7. Running the Application
 
-Avanthikaa S G
+Start the Streamlit application:
 
-Infosys Springboard Internship Project
+```bash
+streamlit run app.py
+```
+
+If a valid Gemini API key is provided, the application enables AI-powered analysis. Otherwise, all analysis is performed using local static analysis tools.
+
+---
+
+## 8. Output
+
+The application generates:
+
+- Code Quality Analysis Report
+- Security Vulnerability Report
+- Complexity Analysis
+- OWASP Mapping
+- CWE Mapping
+- Security Score
+- Tool Execution Summary
+- Downloadable PDF Security Report
